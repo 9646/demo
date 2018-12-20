@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style> 
+        html,body{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        ul,li {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        main {
+            width: 100%;
+            height: 100%;
+            padding: 5%;
+            box-sizing: border-box;
+        }
+        div.leftDiv{
+            width: 30%;
+            float: left;
+        }
+        div.rightDiv {
+            width: 70%;
+            float: right;
+        }
+        div.leftDiv,div.rightDiv {
+            height: 100%;
+            border: solid 1px #eee;
+            box-sizing: border-box;
+            /* text-align: center; */
+            padding: 5%;
+        }
+        .leftDiv ul li {
+            line-height: 30px;
+            border-bottom: solid 1px #ccc;
+            overflow: hidden;
+        }
+
+        .leftDiv ul li span{
+            margin-left: 30px;
+        }
+        input.add {
+            width: 100%;
+            border-style: none;
+            line-height: 30px;
+            margin-top: 20px;
+            border-bottom: solid 1px #ccc;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+        .del {
+            color: red;
+            float: right;
+        }
+        h3{
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+            color: #ff5809;
+        }
+        .rightDiv div{
+            text-align: center;
+            margin: 0 auto;
+        }
+        .rightDiv div button{
+            border: none;
+            width: 50px;
+            height: 30px;
+            line-height: 30px;
+            display: none;
+        }
+        .rightDiv div button.active {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="leftDiv">
+            <ul>
+                <li><input type="checkbox" checked="checked"><span>123</span><span class="del" onclick="delData()">del</span></li>
+                <li><input type="checkbox"><span>123</span></li>
+                <li><input type="checkbox"><span>123</span></li>
+            </ul>
+            <input type="text" class="add" placeholder="add name">
+        </div>
+        <div class="rightDiv">
+            <h3>中午吃什么？</h3>
+            <p><h1>即将揭晓</h1></p>
+            <div>
+                <button id="beginBut" class="active" onclick="begin()">开始</button>
+                <button id="endBut" class="" onclick="end()">结束</button>
+            </div>
+        </div>
+    </main>
+
+</body>
+<script src="../../lib/cache.js"></script>
+<script>
+    var count = 0;
+    var ul = document.querySelector('.leftDiv ul');
+    var addInput = document.querySelector('.add');
+    // 给添加数据加一个keydown事件
+    addInput.onkeydown = function() {
+        if(event.keyCode == 13) {
+            if(!addInput.value) return;
+            var item = {
+                name: addInput.value,
+                isShow: true
+            }
+            data.push(item);
+            init();
+            addInput.value = '';
+        }
+    }
+    // 全部数据
+    var data = [
+        {name: '麻辣烫', isShow: true},
+        {name: '麻辣香锅', isShow: true},
+        {name: '鸭血粉丝', isShow: true},
+        {name: '烤肉饭', isShow: true},
+        {name: '凉皮', isShow: true},
+        {name: '酸汤肥牛', isShow: true},
+        {name: '面条', isShow: true},
+        {name: '米线', isShow: true},
+        {name: '快餐', isShow: true},
+        {name: '混沌', isShow: true}
+    ]
+    // 初始化页面
+    var init = function() {
+        var html = '';
+        for (let i = 0; i < data.length; i++) {
+            if(data[i].isShow) {
+                html += '<li><input type="checkbox" data-item="' + i + '" onchange="inputChange()" checked="checked"><span>' + data[i].name + '</span><span class="del" onclick="delData(' + i + ')">del</span></li>'
+            } else {
+                html += '<li><input type="checkbox" data-item="' + i + '" onchange="inputChange()"><span>' + data[i].name + '</span><span class="del" onclick="delData(' + i + ')">del</span></li>'
+            }
+        }
+        ul.innerHTML = html;
+    }
+    // 选择数据
+    var inputChange = function () {
+        var eve = event.srcElement;
+        data[eve.dataset.item].isShow = eve.checked;
+        setData();
+    }
+    // 删除数据
+    var delData = function(i) {
+        data.splice(i, 1);
+        init();
+        setData();
+    }
+    init();
+
+    var targetData
+    var targetItem;
+    var myInterval;
+
+    var _data;
+    // 获取真实可用的数据
+    var setData = function() {
+        _data = [];
+        for (let i = 0; i < data.length; i++) {
+            if(data[i].isShow) {
+                _data.push(data[i]);
+            }
+        }
+    }
+    setData();
+
+    // 开始抽取
+    function begin() {
+        count++
+        if(count>=5) alert('都选了'+count+'次了，你还吃不吃了')
+        document.querySelector('#beginBut').className = '';
+        document.querySelector('#endBut').className = 'active';
+        myInterval = setInterval(function() {
+            targetItem = Math.floor(Math.random() * _data.length);
+            targetData = _data[targetItem];
+            document.querySelector('h1').innerText = targetData.name;
+        }, 30)
+    }
+    // 结束
+    function end() {
+        document.querySelector('#beginBut').className = 'active';
+        document.querySelector('#endBut').className = '';
+        clearInterval(myInterval);
+    }
+
+
+</script>
+</html>

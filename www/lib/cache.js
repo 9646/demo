@@ -1,5 +1,6 @@
-var cache = C = (function() {
-    var GET_KEY_PREFIX = '_C_';
+var J = {}
+J.Cache = (function() {
+    var GET_KEY_PREFIX = '_J_';
     /**
      * 缓存从服务端获取的数据
      * @param key

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--<meta charset="UTF-8">-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no,width=device-width">
+    <meta name="format-detection" content="telephone=no">
+    <title>【苏果到家】新人优惠券</title>
+    <style>
+        body,
+        html {
+            width: 100%;
+            margin: 0;
+        }
+        
+        #coupons img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .message {
+            padding: 0 10%;
+        }
+        
+        #coupons .phone {
+            margin: 15px 0;
+        }
+        
+        #coupons .phone-num {
+            width: 100%;
+            display: block;
+            line-height: 30px;
+            border: solid 0px #ccc;
+            font-size: 16px;
+            box-sizing: border-box;
+            text-align: center;
+            background: #f2f2f2;
+            border-radius: 5px;
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            height: 40px;
+            margin: 0 auto;
+            border-style: none;
+            padding: 0px;
+            color: white;
+            background-color: #ff3e3e;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        
+        #coupons p {
+            text-align: center;
+            user-select: none;
+            color: #666;
+        }
+        
+        .pop-up {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+        }
+        
+        .showToast {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            top: 100vw;
+            display: none;
+        }
+        
+        .showToast.action {
+            display: block;
+        }
+        
+        .showToast .toast {
+            display: inline-block;
+            padding: 10px;
+            background-color: rgba(40, 40, 40, 0.75);
+            color: white;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .pop-up.action {
+            display: block;
+        }
+        
+        .pop-box {
+            width: 80vw;
+            height: 100vw;
+            position: fixed;
+            top: 20%;
+            left: 10%;
+            background: url(http://wei.vipxiaoqu.com/thumb/receiveCoupons/5.png) no-repeat;
+            background-size: auto;
+            /* box-shadow: 1px 1px 10px #eee; */
+            background-size: cover;
+            /* background-color: white; */
+            border-radius: 8vw;
+            overflow: hidden;
+        }
+        
+        .pop-up button {
+            width: 25vw;
+            margin: 9vw auto;
+        }
+        
+        .buttonDiv {
+            position: absolute;
+            width: 60vw;
+            height: 30vw;
+            padding: 5vw 10vw 5vw;
+            text-align: center;
+            bottom: 5vw;
+            /* background-color: white; */
+        }
+
+        .buttonDiv div {
+            width: 30vw;
+            height: 30vw;
+            float: left;
+            box-sizing: border-box;
+        }
+
+        .buttonDiv div img {
+            width: 25vw;
+            height: auto;
+        }
+        .buttonDiv div p {
+            margin: 0;
+            text-align: center;
+            font-size: 12px;
+        }
+        .buttonDiv p {
+            font-size: 14px;
+            color: #999;
+        }
+        .reminder {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            top: 25vw;
+        }
+        .reminder h3 {
+            color: #ff3e3e;
+            width: 40vw;
+            border-radius: 5vw;
+            background: #eee;
+            margin: 0 auto;
+            line-height: 10vw;
+            font-size: 5vw;
+        }
+        .reminder p {
+            font-size: 5vw;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body onload="load()">
+    <div id="coupons">
+        <img src="https://mi.vipxiaoqu.com/xyh/1.png" alt="">
+        <div class="message">
+            <div class="phone">
+                <input type="tel" name="phone" maxlength="11" placeholder="请输入正确的手机号码" class="phone-num">
+            </div>
+            <div>
+                <button onclick="getCoupons()">立即领取</button>
+            </div>
+            <div>
+                <!-- <p>新人优惠券，点击就送</p> -->
+            </div>
+        </div>
+    </div>
+    <div class="pop-up" onclick="hidePopup()">
+        <div class="pop-box" onclick="stopClick()">
+            <div class="reminder">
+                <h3>领取成功</h3>
+                <p>关注“苏果到家”立即使用</p>
+            </div>
+            <div class="buttonDiv">
+                <div>
+                    <img src="http://wei.vipxiaoqu.com/thumb/presentCoupons/152.jpg" alt="" onclick="">
+                    <p>长按识别关注</p>
+                </div>
+                <div>
+                    <button onclick="downloadApp()">下载app</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="showToast">
+        <p class="toast">请输入正确的手机号</p>
+    </div>
+</body>
+<script>
+    function load() {
+        window.paramsId = 152;
+        var params = location.search.split('=')[1];
+        if(params) {
+            window.paramsId = params;
+        }
+        var imgUrl = 'http://wei.vipxiaoqu.com/thumb/presentCoupons/' + paramsId + '.jpg';
+        document.querySelector('.buttonDiv img').src = imgUrl;
+    }
+    function getCoupons() {
+        var phone = document.getElementsByClassName('phone-num')[0].value;
+        var myreg = /^1([3|4|5|7|8|9]+\d{9})$/;
+        if (myreg.test(phone)) {
+            function loadXMLDoc() {
+                var xmlhttp;
+                if (window.XMLHttpRequest) {
+                    xmlhttp = new XMLHttpRequest();
+                } else {
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function () {
+                    console.log(xmlhttp);
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        
+                        var res = JSON.parse(xmlhttp.response);
+                        console.log(res);
+                        console.log(res.success);
+
+                        var msg = res.message;
+                        document.querySelector('.pop-up .reminder h3').innerText = msg;
+                        document.querySelector('.pop-up').setAttribute('class', 'pop-up action');
+                    }                 
+                }
+				var url = "https://wei.vipxiaoqu.com/ws/couponAction!joinUsPrsentCoupon.sy?phone=" + phone + "&paramsId=" + paramsId;
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
+            }
+            loadXMLDoc();
+        } else {
+            document.querySelector('.toast').innerText = '请输入正确的手机号码';
+            document.querySelector('.showToast').setAttribute('class', 'showToast action');
+            setTimeout(function () {
+                document.querySelector('.showToast').setAttribute('class', 'showToast');
+            }, 1000);
+        }
+    }
+    function downloadApp() {
+        window.location.href = 'http://wei.vipxiaoqu.com/install/index.html?paramsId=' + paramsId;
+                                
+    }
+    function hidePopup() {
+        document.querySelector('.pop-up').setAttribute('class', 'pop-up');
+    }
+    function stopClick () {
+        event.stopPropagation()
+    }
+</script>
+
+</html>

@@ -170,7 +170,7 @@
         <img src="https://mi.vipxiaoqu.com/xyh/1.png" alt="">
         <div class="message">
             <div class="phone">
-                <input type="tel" name="phone" maxlength="11" placeholder="请输入正确的手机号码" class="phone-num">
+                <input type="tel" name="phone" maxlength="11" placeholder="请输入正确的手机号码" class="phone-num" onblur="inputBlur()">
             </div>
             <div>
                 <button onclick="getCoupons()">立即领取</button>
@@ -258,6 +258,14 @@
     function stopClick () {
         event.stopPropagation()
     }
-</script>
+    
+    
+    function inputBlur() {
 
+    }
+</script>
+		<script src="https://www.shchuwa.cn/storage/eruda/eruda.min.js"></script>
+	    <script>
+	        eruda.init();
+	    </script>
 </html>
